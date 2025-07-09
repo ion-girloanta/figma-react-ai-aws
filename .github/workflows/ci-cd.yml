@@ -1,0 +1,22 @@
+
+name: Deploy React App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: cd project-root/frontend && npm install
+      - name: Build
+        run: cd project-root/frontend && npm run build
+      - name: Deploy to S3
+        run: aws s3 sync project-root/frontend/dist s3://figma-react-frontend --delete
